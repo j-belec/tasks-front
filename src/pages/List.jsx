@@ -1,10 +1,13 @@
-import { useEffect, useState } from "react";
-import { useLoaderData } from "react-router-dom";
 import Task from "../components/Task";
 import TaskModalCreate from "../components/TaskModalCreate";
 import TaskModalUpdate from "../components/TaskModalUpdate";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+
+import { useEffect, useState } from "react";
+import { useLoaderData } from "react-router-dom";
 
 function List() {
   const listData = useLoaderData();
@@ -37,55 +40,81 @@ function List() {
     setAddTask(est);
   };
 
-  const taskHandler = (index) => {
+  const taskHandler = (index, state) => {
     setStates((prevStates) => {
       const newStates = [...prevStates];
-      newStates[index] = true;
-      // console.log(index);
+      newStates[index] = state;
       return newStates;
     });
   };
 
   return (
-    <div>
-      <h1 className="text-[3rem] font-medium text-center my-[2rem]">
-        {listData.name}
-      </h1>
-      <div className="flex flex-col gap-[1rem]">
+    <section className="w-[calc(100%-24rem)] min-h-screen ml-auto bg-main-bg">
+      <div className="h-[10rem] flex items-center border-b-[1px] border-[#0000001f]">
+        <h1 className="text-[3rem] pl-[3rem] font-bold">{listData.name}</h1>
+      </div>
+      <div className="w-[70%] mx-auto flex justify-between items-center mt-[4rem] mb-[5rem]">
+        <h1 className="text-[2.5rem] font-bold">Tasks</h1>
+        <button
+          className="text-[2rem] font-medium text-white bg-[#4e2775] rounded-[4px] px-[2rem] py-[1rem]"
+          onClick={() => setAddTask((previousValue) => !previousValue)}
+        >
+          <FontAwesomeIcon icon={faPlus} className="text-[2.5rem]" />
+        </button>
+      </div>
+      <div className="flex flex-col gap-[1rem] w-[70%] mx-auto">
+        <div className="w-[100%] h-[4rem] text-[1.6rem] text-[#6d6d6d] font-medium mx-auto flex items-center justify-between rounded-[4px] px-[5rem]">
+          <p>Task Name</p>
+          <div className="flex gap-[2rem]">
+            <p className=" w-[8.5rem] text-center">Status</p>
+            <p className="w-[8.5rem] text-center">Priority</p>
+          </div>
+        </div>
         {tasks.map((task, i) => {
           return (
             <>
               <div
-                className="w-[70%] m-auto"
+                className=""
                 key={`${task.user_id}-${task.id}`}
-                onClick={() => taskHandler(i)}
+                onClick={() => taskHandler(i, true)}
               >
-                <Task name={task.name} />
+                <Task
+                  name={task.name}
+                  status={task.status}
+                  priority={task.priority}
+                />
               </div>
               {states[i] && (
-                <TaskModalUpdate taskId={task.id} listId={listData.id} />
+                <TaskModalUpdate
+                  taskId={task.id}
+                  listId={listData.id}
+                  index={i}
+                  onTaskHandler={taskHandler}
+                />
               )}
             </>
           );
         })}
 
-        <div
-          className="w-[70%] h-[4rem] border-[1px] border-black mx-auto flex items-center justify-center hover:cursor-pointer"
-          onClick={() => setAddTask((previousValue) => !previousValue)}
-        >
-          <p className="text-[1.5rem]">Add Task +</p>
-        </div>
+        {tasks.length === 0 && (
+          <div
+            className="w-[100%] h-[4rem] border-[1px] border-black mx-auto flex items-center justify-center hover:cursor-pointer"
+            onClick={() => setAddTask((previousValue) => !previousValue)}
+          >
+            <p className="text-[1.5rem]">Add Task +</p>
+          </div>
+        )}
       </div>
       {addTask && (
         <TaskModalCreate
           listName={listData.name}
           listId={listData.id}
           userId={listData.user_id}
-          manageTask={addTaskHandler}
+          onAddTaskHandler={addTaskHandler}
         />
       )}
       <ToastContainer position="top-right" autoClose={3000} />
-    </div>
+    </section>
   );
 }
 

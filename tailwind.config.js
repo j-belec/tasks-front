@@ -5,6 +5,9 @@ module.exports = {
       spacing: {
         "5%": "5%",
       },
+      colors: {
+        "main-bg": "#e9ecef",
+      },
     },
   },
   plugins: [],

@@ -22,22 +22,51 @@ function TaskModalUpdate(props) {
   }, [props.taskId, props.listId]);
 
   return (
-    <div className="absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] w-[40vw] h-[60vh] text-[1.5rem] py-[2rem] px-[4rem] bg-slate-400">
-      <h2 className="text-center text-[2rem] mb-[2rem] font-medium">
-        {props.listName}
-      </h2>
-      <form className="flex flex-col gap-[0.8rem] h-[calc(100%-50px)]">
+    <div className="absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] w-[40vw] h-[65vh] text-[1.5rem] py-[2rem] px-[4rem] bg-slate-400">
+      <form className="flex flex-col gap-[0.8rem] h-[calc(100%-1rem)]">
         <p className="font-medium">Task Name</p>
         <input
           type="text"
           name="task-name"
           id=""
-          className="mb-[2rem]"
+          className="mb-[1rem]"
           value={task.name}
         />
+
         <p className="font-medium">Description</p>
-        <textarea name="task-description" value={task.description} />
-        <button className="mt-auto">Save</button>
+        <textarea
+          name="task-description"
+          value={task.description}
+          rows="8"
+          className="mb-[1rem]"
+        />
+
+        <p className="font-medium">Status</p>
+        <select name="select" className="mb-[1rem]">
+          <option value="value1">Open</option>
+          <option value="value2">In progress</option>
+          <option value="value3">Completed</option>
+        </select>
+
+        <p className="font-medium">Priority</p>
+        <select name="select" className="mb-[1rem]">
+          <option value="value1">Low</option>
+          <option value="value2">Medium</option>
+          <option value="value3">High</option>
+        </select>
+
+        <div className="mt-auto flex justify-end gap-[1.5rem]">
+          <button
+            type="button"
+            className="w-[10rem] bg-slate-600 px-[1.6rem] py-[0.8rem]"
+            onClick={() => props.onTaskHandler(props.index, false)}
+          >
+            Cancel
+          </button>
+          <button className="w-[10rem] bg-slate-600 px-[1.6rem] py-[0.8rem]">
+            Save
+          </button>
+        </div>
       </form>
     </div>
   );

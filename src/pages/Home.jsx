@@ -1,6 +1,9 @@
+import ListModal from "../components/ListModal";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faList, faPlus } from "@fortawesome/free-solid-svg-icons";
+
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import ListModal from "../components/ListModal";
 import { Link, redirect } from "react-router-dom";
 
 let id = 1;
@@ -33,8 +36,8 @@ function Home() {
     getLists();
   }, [login]);
 
-  const newListHandler = () => {
-    setModal(true);
+  const newListHandler = (state) => {
+    setModal(state);
   };
 
   // if (!login) {
@@ -46,30 +49,44 @@ function Home() {
   // }
 
   return (
-    <div className="w-[70%] mx-auto mt-[6rem]">
-      <div className="w-[70%] mx-auto flex justify-between items-center mb-[10rem]">
-        <h1 className="text-[2.5rem] font-medium">My tasks lists</h1>
-        <button
-          className="text-[2rem] font-medium text-white bg-[rgb(99,102,241)] px-[2rem] py-[1rem]"
-          onClick={newListHandler}
-        >
-          New List
-        </button>
-        {modal && <ListModal />}
+    <section className="w-[calc(100%-24rem)] min-h-screen ml-auto bg-main-bg">
+      <div className="h-[10rem] flex items-center border-b-[1px] border-[#0000001f]">
+        <h1 className="text-[3rem] pl-[3rem] font-bold">Home</h1>
       </div>
-      <div className="flex flex-wrap gap-[2rem] justify-center mb-[10rem]">
+      <div className="w-[70%] mx-auto flex justify-between items-center mt-[4rem] mb-[6rem]">
+        <h1 className="text-[2.5rem] font-bold">My Lists</h1>
+        <button
+          className="text-[2rem] font-medium text-white bg-[#4E2775] rounded-[4px] px-[2rem] py-[1rem]"
+          onClick={() => newListHandler(true)}
+        >
+          <FontAwesomeIcon icon={faPlus} className="text-[2.5rem]" />
+        </button>
+        {modal && <ListModal onNewListHandler={newListHandler} />}
+      </div>
+      <div className="w-[70%] flex flex-wrap gap-x-[2rem] gap-y-[3rem] justify-center mx-auto pb-[10rem]">
         {lists.map((list) => {
           return (
             <Link
               to={`/lists/${list.user_id}/${list.id}/${list.slug}`}
-              className="w-[20rem] h-[10rem] bg-slate-400 p-[1rem] hover:scale-[1.02] duration-150"
+              className="w-[31%] h-[15rem] bg-white p-[2rem] hover:scale-[1.02] duration-150 rounded-[4px] shadow-[rgba(17,_17,_26,_0.1)_0px_0px_16px] flex flex-col justify-between"
             >
-              <p className="text-[1.5rem] font-medium ">{list.name}</p>
+              <div className="flex items-center gap-[0.5rem]">
+                <FontAwesomeIcon
+                  icon={faList}
+                  className="text-[2rem] text-[#4e2775a4] pt-[2px]"
+                />
+                <p className="text-[2rem] font-medium ">{list.name}</p>
+              </div>
+              <div className="flex flex-col items-end text-[1.4rem] font-medium text-[#6d6d6d] mt-auto">
+                <p>Open tasks: {list.open_tasks}</p>
+                <p>In progress tasks: {list.inprogress_tasks}</p>
+                <p>Completed tasks: {list.completed_tasks}</p>
+              </div>
             </Link>
           );
         })}
       </div>
-    </div>
+    </section>
   );
 }
 
